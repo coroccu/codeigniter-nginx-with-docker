@@ -1,0 +1,8 @@
+# For Mac
+.DS_STORE
+
+# For mysql data
+mysql/data/
+
+# For phpadmin data
+phpadmin-sessions/

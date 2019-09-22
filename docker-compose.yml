@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  nginx: 
+    build: ./nginx
+    container_name: nginx
+    ports: 
+      - "8080:80"
+
+  ci: 
+    build: ./php
+    container_name: ci
+    volumes:
+      - ./ci/:/var/www/html/
+    entrypoint:
+      - /usr/bin/spawn-fcgi
+      - -C
+      - "5"
+      - -n
+      - -p
+      - "9000"
+      - --
+      - /usr/bin/php-cgi
+
+  db:
+    build: ./mysql
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    volumes:
+      - ./phpadmin-sessions:/sessions
+
